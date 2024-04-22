@@ -26,3 +26,31 @@ This PHP-based project provides a robust solution for uploading images through a
 6. **Completion Notification**: Once processing is complete, the server updates the session with a final message and a link to the processed image, which is then displayed to the user.
 
 This project is ideal for developers looking for a simple yet effective way to implement image uploads with real-time status updates in their web applications.
+
+## Components
+
+### 1. Frontend Interface (`index.php`)
+
+- **HTML Form for Upload:** Users can submit images via an HTML form (`#uploadForm`). This form includes a file input and a submit button.
+- **JavaScript for Async Upload and Status Checking:** Prevents the default form submission to use `FormData` for sending the file asynchronously with `XMLHttpRequest`.
+- **Progress and Status Display:** Uses `xhr.upload.onprogress` event handler to show upload progress as a percentage. Simultaneously, it begins to periodically check the processing status by calling `processStatus.php`.
+
+### 2. Upload Handler (`uploadHandler.php`)
+
+- **Session Management:** Initiates a session to store the upload status, including stages and messages.
+- **File Validation:** Checks if the uploaded file is an allowed type (JPEG, PNG, GIF) and does not exceed the size limit (5 MB).
+- **File Storage:** Moves the uploaded file to a designated directory (`uploads/`).
+- **Processing Simulation:** Simulates processing steps post-upload. It updates the session variable `upload_status` at various stages (from stage 2 to 4), each followed by a simulated delay of 2 seconds. After processing, it updates the session with the final status and a link to the processed file.
+
+### 3. Processing Status (`processStatus.php`)
+
+- **Session Read:** Retrieves the current status from the session (`upload_status`), which includes the stage and message.
+- **Status Response:** Sends the status back as a JSON object to the frontend, allowing UI updates based on processing progress.
+
+## Summary
+
+- **Image Upload:** Users select and submit an image through the form. The upload process is handled asynchronously.
+- **Validation and Storage:** The server validates the file type and size, storing it if the criteria are met.
+- **Progress Monitoring:** The client continually checks the status of the upload and processing by querying `processStatus.php`.
+- **Processing Simulation:** Simulated processing updates are executed on the server, which are then communicated back to the client.
+- **Completion and Link:** Once processing is complete, a link to the processed image is presented to the user.
